@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Enroll</title>
+    <link href="css/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <header>
+      <div class="container clearfix">
+        <div class='topBar clearfix'>
+          <ul class="logActions">
+            <li class="hideOnSmall">
+              <a href="">
+                <span class="iconLog"></span>
+                <span class="logText">login</span>
+              </a>
+            </li><!--
+            --><li>
+              <a  href="tel:+71888600" class="phone">
+                <span class="iconPhone"></span>
+                <span class="tellNumber">1-888-600-0QPT</span>
+              </a>
+            </li>
+          </ul>
+          <div class="buttonGroup hideOnSmall">
+            <a href="" class="joinTeam btn">join our team of personal trainers</a>
+            <button type="button" class="getSession showPopup btn">get a free personal training session</button>
+          </div>
+        </div>
+        <nav class="clearfix">
+          <a href="" class="logo"><img src="img/logo.svg"></a>
+          <button type="button" class="navToggle btn showOnSmall">
+            <!-- <span class="iconMenu"></span> -->
+            <span class="menuToggleText">menu</span>
+          </button>
+          <ul class="mainNav">
+            <li><a href="">about</a></li><!--
+            --><li>
+              <span class="triangle"></span>
+              <span class="dropDownToggle">programs</span>              
+              <ul class="dropDown">
+                <li><a href="">program 1</a></li>
+                <li><a href="">program 2</a></li>
+                <li><a href="">program 3</a></li>
+                <li><a href="">program 4</a></li>
+              </ul>
+            </li><!--
+            --><li>
+              <span class="triangle"></span>
+              <span class="dropDownToggle">trainers</span>              
+              <ul class="dropDown">
+                <li><a href="">meet our trainers</a></li>
+                <li><a href="">join our team </a></li>
+              </ul>
+            </li><!--
+            --><li><a href="">client transformations</a></li><!--
+            --><li><a href="">contact us</a></li><!--
+            --><li class="logInMobile showOnSmall">
+              <a href="">
+                <span class="iconLog"></span>
+                <span class="logText">login</span>
+              </a>
+            </li><!--
+            --><li class="showOnSmall">
+              <a href="" class="joinTeam btn">join our team of personal trainers</a>
+            </li><!--
+            --><li class="showOnSmall">
+              <button type="button" class="getSession showPopup btn">get a free personal training session</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <div class="banner">
+      <h2>join our team of professional trainers</h2>
+    </div>
+    <div class="container" id="enroll">
+      <h3>Enroll</h3>
+      <p>You are about to enroll as a QPersonalTrainer. Fill out and submit the form. Then get ready to take the Quantum leap to being the best PT you can be and watch your career take off.  You will be charged a one-time enrollment fee of <span class="highlighted boldText">$599*</span> plus a recurring monthly fee of <span class="highlighted boldText">$119*</span>.</p>
+      <span class="attention"><span class="highlighted">*</span>If you have a promotion code, please enter it for your discount to be applied!</span>
+      <form class="clearfix">
+        <fieldset class="billingInfo">
+          <legend>Billing Information</legend>
+          <div class="inputGroup inline">                     
+            <label>
+              <span class="labelText">Name:</span>
+              <input type="text">
+            </label>
+          </div>
+          <div class="inputGroup inline">                     
+            <label>
+              <span class="labelText">Email:</span>
+              <input type="email">
+            </label>
+          </div>
+          <div class="inputGroup inline">                     
+            <label>
+              <span class="labelText">Address:</span>
+              <input type="text">
+            </label>
+          </div>
+          <div class="inputGroup inline">                     
+            <label>
+              <span class="labelText">City:</span>
+              <input type="text">
+            </label>
+          </div>
+          <div class="inputGroup inline">                     
+            <label>
+              <span class="labelText">Zip Code:</span>
+              <input type="text" class="narrow">
+            </label>
+          </div>
+          <div class="selectGroup clearfix">
+          <label for="country">Country</label>                  
+            <select data-dropdown-options='{"label":" "}' id="country">
+              <option>Country 1</option>
+              <option>Country 2</option>
+              <option>Country 3</option>
+              <option>Country 4</option>                       
+            </select>
+          </div>
+          <div class="inputGroup inline">                     
+            <label>
+              <span class="labelText">State / Province:</span>
+              <input type="text">
+            </label>
+          </div>
+          <div class="inputGroup inline">                     
+            <label>
+              <span class="labelText">Tel:</span>
+              <input type="tel">
+            </label>
+          </div>
+          <div class="inputGroup inline">                     
+            <label>
+              <span class="labelText">Promotional code:</span>
+              <input type="text" class="narrow marked">
+            </label>
+          </div>
+        </fieldset>
+        <fieldset class="cardInfo">
+          <legend>Credit Card Information</legend>
+          <ul class="possibleCards">
+            <li class="iconVisa"></li><!--
+            --><li class="iconMaster"></li><!--
+            --><li class="iconAmEx"></li><!--
+            --><li class="iconDiscover"></li><!--
+            --><li class="iconPaypal"></li>
+          </ul>
+          <div class="inputGroup marked">                     
+            <input type="text" placeholder="Credit Card Number">
+          </div><!--
+          --><div class="inputGroup narrow">                     
+            <input type="text" placeholder="Security Code">
+          </div><!--
+          --><div class="inputGroup expires">
+            <span class="label">Expires:</span>                     
+            <input type="text" placeholder="Month"><!--
+            --><input type="text" placeholder="Year">
+          </div><!--
+          --><div class="checkBoxGroup">                  
+            <label>
+              <input type="checkbox">
+              <span class="square"><span class="icon-check"></span></span>
+              <a href="" class="attention">I have read and agreed to the terms and conditions of this website</a>
+            </label>                    
+          </div>
+          <div class="typeCode">
+            <span class="attention">Type the code you see <span class="hideOnSmall">in the picture below:</span></span>
+            <div class="inputGroup">
+              <img src="img/number.jpg">
+              <input type="text">
+            </div>
+          </div>
+          <div class="formActions">
+            <button type="submit" class="btn">submit</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+    <footer>
+      <div class="signeUpSection">
+        <div class='container clearfix'>
+          <div class="heading">
+            <span class="smallHeading">receive our <span class="highlighted">monthly</span></span>
+            <h2>fitness tips</h2>
+          </div>
+          <p>Sign up for our free monthly newsletter and we’ll send you easy to follow tips and suggestions for improving your health and well-being.</p>
+          <form>
+            <div class="inputGroup">                     
+              <label>
+                <input type="email" placeholder="enter your email*">
+              </label>
+            </div><!--            
+            --><button type="submit"></button>
+          </form>
+        </div>
+      </div>
+      <div class="mainFooter">
+        <div class="container">
+          <div class="footerBar clearfix">
+            <a href="" class="logo"><img src="img/logofooter.svg" alt="" width='240' height='45'></a>
+            <ul class="footerNav clearfix">
+              <li><a href="">trainers</a></li><!--
+              --><li><a href="">testimonals</a></li><!--
+              --><li><a href="">contact us</a></li>
+            </ul>
+            <ul class="socialNav">
+              <li><a href="" class="icomoon-facebook"></a></li><!--
+              --><li><a href="" class="icomoon-twitter"></a></li><!--
+              --><li><a href="" class="icomoon-instagram"></a></li><!--
+              --><li><a href="" class="icomoon-pinterest"></a></li>
+            </ul>
+          </div>
+          <div class="bottomBar clearfix">
+            <a href="tel:+71888600" class="phone">
+              <span class="iconPhone"></span>
+              <span class="tellNumber">1-888-600-0QPT</span>
+            </a>
+            <div class="buttonGroup clearfix">
+              <a href="" class="joinTeam btn">join our team of personal trainers</a>
+              <button type="button" class="getSession btn">get a free personal training session</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="copyrightInfo container clearfix"><a href="" class="legal">Legal</a>&copy; 2015 <a href="" class="companyName">QPersonalTrainer.com.</a> All Rights Reserved. Developed by <a href="#" class="developer">Dextel.net</a></p>
+    </footer>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/slick.min.js"></script>
+    <script src="js/core.js"></script>
+    <script src="js/dropdown.js"></script>
+    <script src="js/script.js"></script>
+		<script>
+		  $(document).ready(function(){
+        selectFocuse();
+
+        $('select').dropdown();
+
+			});
+
+			$(window).resize(function() {
+
+      });
+		</script>
+  </body>
+</html>
+
+ 		
