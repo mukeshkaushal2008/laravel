@@ -1,6 +1,6 @@
 var coverApp = angular.module('coverApp', ['ngCookies', 'ui.router', 'slickCarousel', 'ngMessages', 'ui.bootstrap', 'ngTagsInput', 'ngImageInputWithPreview']);
 
-coverApp.constant("BASEURL", "http://staging.locumapp.com/");
+coverApp.constant("BASEURL", "http://staging.cover");
 
 
 coverApp.config(function ($stateProvider, $urlRouterProvider) {
