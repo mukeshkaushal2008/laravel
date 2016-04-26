@@ -26,18 +26,18 @@
     echo Form::token();
     
     ?>
-  {!! Form::hidden('id',$resultset->id) !!}
+  {!! Form::hidden('id',isset($resultset->id) ? $resultset->id : '') !!}
     <div class="form-group">
     <label for="inputName3" class="col-sm-2 control-label">Name</label>
     <div class="col-sm-3">
-        <input type="text" class="form-control" id="inputName3" placeholder="Name" name="name" value="{{ old('name') ? old('name') : $resultset->name }}">
+        <input type="text" class="form-control" id="inputName3" placeholder="Name" name="name" value="{{ old('name') ? old('name') : isset($resultset->name) ? $resultset->name : '' }}">
     </div>
   </div>
     
   <div class="form-group">
     <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
     <div class="col-sm-3">
-        <input type="email" class="form-control" id="inputEmail3" placeholder="Email" name="email" value="{{ old('email') ? old('email') :  $resultset->email}}">
+        <input type="email" class="form-control" id="inputEmail3" placeholder="Email" name="email" value="{{ old('email') ? old('email') :  isset($resultset->email) ? $resultset->email : ""}}">
     </div>
   </div>
   <div class="form-group">

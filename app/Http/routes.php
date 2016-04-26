@@ -11,16 +11,43 @@
 |
 */
 
-Route::get('/', function () {
-    return view('home.index');
-});
-Route::get('/users','UsersController@index');
-Route::get('/users/create','UsersController@create');
-//Route::get('/users/edit/{id}','UsersController@edit');
-Route::get('/users/show/{id}','UsersController@show');
-Route::get('/users/destroy','UsersController@destroy');
-Route::post('/users/addUser','UsersController@addUser');
+     Route::get('/', function () {
+        return view('angular_index');
+    });
+    /*Route::get('/', function () {
+        return view('home.index');
+    });*/
 
+Route::get('/users', [
+    'middleware' => 'auth',
+    'uses' => 'UsersController@index'
+]);
+
+
+Route::get('/users/addUser', [
+    'middleware' => 'auth',
+    'uses' => 'UsersController@addUser'
+]);
+
+Route::post('/users/addUser', [
+    'middleware' => 'auth',
+    'uses' => 'UsersController@addUser'
+]);
+
+Route::get('/users/destroy', [
+    'middleware' => 'auth',
+    'uses' => 'UsersController@destroy'
+]);
+
+Route::get('/users/create', [
+    'middleware' => 'auth',
+    'uses' => 'UsersController@create'
+]);
+
+Route::get('/users/show/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'UsersController@show'
+]);
 
 Route::get('/users/edit/{id}', [
     'middleware' => 'auth',

@@ -16,7 +16,7 @@ use Redirect;
 use Hash;
 use DB;
 use Auth;
-
+use Session;
 
 class UsersController extends Controller
 {
@@ -28,8 +28,6 @@ class UsersController extends Controller
    
     public function index()
     {
-        
-      
        $sort = Input::get('sort');
        if(isset($sort) && $sort == "name"){
           $users = User::orderBy('name', 'asc')->paginate(3); 
@@ -101,7 +99,6 @@ class UsersController extends Controller
             $user = User::create(array('name' =>$arr['name'],'email' => $arr['email'],'password' => $arr['password'] ));
        }
        if(isset($user) && !empty($user)){
-           
             $request->session()->flash('success', 'User '.$msg);
             return Redirect::to('users/'.$view);
        }else{
