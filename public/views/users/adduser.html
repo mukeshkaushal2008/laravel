@@ -1,0 +1,54 @@
+<div class="container">
+  <h2>Add users</h2>
+<form class="form-horizontal">
+<div class="form-group">
+    <label for="inputName3" class="col-sm-2 control-label">Name</label>
+    <div class="col-sm-3">
+        <input type="text" class="form-control" id="inputName3" placeholder="Name" name="name" ">
+    </div>
+  </div>
+    
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+    <div class="col-sm-3">
+        <input type="email" class="form-control" id="inputEmail3" placeholder="Email" name="email" >
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+    <div class="col-sm-3">
+       
+        <multiple-date-picker
+            ng-model="rangeOfDates"
+            highlight-days="highlightDays"
+            days-selected="rangeOfDates"
+            day-click="myCallback"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-primary" ng-click="add()">Update</button>
+    </div>
+  </div>
+</form>
+</div>
+<style>
+    /*apply colors if not selected, if selected I want the default selected css*/
+.picker-day.holiday:not(.picker-selected){
+    background-color: #00ffa2;
+    color: #fff;
+}
+
+/*if my holiday isn't clickable (it's the case in the demo)*/
+.picker-day.holiday.picker-off{
+    background-color: #00a267;
+    color: #fff;
+    cursor: default;
+}
+
+/*my birthday, is clickable*/
+.picker-day.birthday:not(.picker-selected){
+    background-color: #ded100;
+    color: #000;
+}
+    </style>

@@ -1,82 +1,109 @@
-coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http, $cookieStore, $stateParams,$timeout,CommonServices) {
+coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http, $cookieStore, $stateParams, $timeout, CommonServices, multipleDatePickerBroadcast) {
     //$scope.view = $state.params.action;
-    
+    $scope.highlightDays = [
+        {date: moment().date(2).valueOf(), css: 'holiday', selectable: false,title: 'Holiday time !'},
+        {date: moment().date(14).valueOf(), css: 'off', selectable: false,title: 'We don\'t work today'},
+        {date: moment().date(25).valueOf(), css: 'birthday', selectable: true,title: 'I\'m thir... i\'m 28, seriously, I mean ...'}
+    ];
+
+    $scope.rangeOfDates = []; //for example
+    $scope.myCallback = function (event, date) {
+        //reproduce the standard behavior
+        date.selected = !date.selected
+        var date_selected = date.valueOf();
+        if (date.selected) {
+             $scope.rangeOfDates.push(date_selected);
+        } else {
+            for (i = 0; i < $scope.rangeOfDates.length; i++) {
+                if ($scope.rangeOfDates[i] == date_selected) {
+                    $scope.rangeOfDates.splice(i,1);
+                }
+            }
+        }
+    };
+    $scope.add = function(){
+        console.log($scope.rangeOfDates);
+    }
+
+    $scope.$on("$stateChangeError", function (event, toState, toParams, fromState, fromParams, error) {
+        alert("login");
+    });
     var user_data = $cookieStore.get('user_data');
-    
+
     var action = $state.current.name;
     $scope.open_hospital_form = 0;
     $scope.animationsEnabled = true;
     $scope.experience = [];
-    
+
     $scope.uploadFile = function (type) {
         switch (type) {
             case "profile_pic" :
-            var doc_type = $scope.profile_pic;
-            break;
+                var doc_type = $scope.profile_pic;
+                break;
         }
-         $scope.loading = true;
+        $scope.loading = true;
         $http({
             method: 'POST',
             url: '/users/uploadFile',
             data: {'file_type': type, 'file': doc_type, 'user_id': $stateParams.id}, }).then(function successCallback(result) {
-             $scope.loading = false;
+            $scope.loading = false;
             if (result.data.response == "success") {
-                    $scope.getUserDocuments(); 
-            } else{
-               alert(result.message);
-                }
-            }, function errorCallback(result) {
-                $scope.loading = false;
-                 //console.log(result.data)
-            });
+                $scope.getUserDocuments();
+            } else {
+                alert(result.message);
+            }
+        }, function errorCallback(result) {
+            $scope.loading = false;
+            //console.log(result.data)
+        });
     }
-    
+
     $scope.uploadDoc = function (files, type) {
         $scope.loading = true;
         var form_data = new FormData();
-        
+
         form_data.append("file", files[0]);
         form_data.append("user_id", $stateParams.id);
         form_data.append("type", type);
-       
+
         var uploadUrl = "/users/uploadDoc";
-        
+
         $http.post(uploadUrl, form_data, {
             withCredentials: true,
             headers: {'Content-Type': undefined},
             crossDomain: false,
             transformRequest: angular.identity
         }).success(function (result) {
-             $scope.loading = false;
+            $scope.loading = false;
             if (result.response == "success") {
-               $scope.getUserDocuments(); 
-            }else{
-               alert(result.message);
+                $scope.getUserDocuments();
+            } else {
+                alert(result.message);
             }
         }).error(function (result) {
             $scope.loading = false;
         });
     };
-    
-    
-    
+
+
+
     $scope.employerDashboard = function () {
         $http({
             method: 'POST',
             url: '/users/employerDashboard',
             data: {},
         }).then(function successCallback(result) {
-           // console.log(result.data);
+            // console.log(result.data);
             if (result.data.response == "success") {
-                   
+
             } else {
             }
         }, function errorCallback(result) {
-             //console.log(result.data)
+            //console.log(result.data)
         });
     }
-    
-    
+
+
 
     /*Function to create doctor signup
      * Params - user data
@@ -99,23 +126,23 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             }
         }, function errorCallback(result, status, headers, config) {
             if (result.status == "400") {
-              alert(result.status);
+                alert(result.status);
             } else if (result.status == "401") {
-               alert(result.status);
+                alert(result.status);
             } else if (result.status == "402") {
-               alert(result.status); 
+                alert(result.status);
             } else if (result.status == "403") {
-               alert(result.status); 
+                alert(result.status);
             } else if (result.status == "404") {
-               alert('404 (Not Found)'); 
+                alert('404 (Not Found)');
             } else if (result.status == "500") {
-               alert(result.status);
+                alert(result.status);
             }
         });
     };
-    
-    
-      /*Function to get all active experiences
+
+
+    /*Function to get all active experiences
      * Params - null
      * output - Returns all active experiences in asc order
      */
@@ -134,8 +161,8 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             // console.log(result.data)
         });
     };
-    
-     /*Function to get all active grades
+
+    /*Function to get all active grades
      * Params - null
      * output - Returns all grades experiences in asc order
      */
@@ -154,7 +181,7 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             // console.log(result.data)
         });
     };
-    
+
 
     /* Function to get user_info of the user by his id
      * Params - id
@@ -172,7 +199,7 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
                 $scope.user_data = "";
             }
         }, function errorCallback(result) {
-           // console.log(result.data)
+            // console.log(result.data)
         });
     };
 
@@ -189,29 +216,29 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
         $scope.getAllGrades();
         $scope.gender = 'male';
         $scope.is_limited_company = 'yes';
-        
-         /*Function to create doctor signup step2
+
+        /*Function to create doctor signup step2
          * Params - user data
          * output - Returns create created for step2
          */
-           
-             $scope.loadExperiences = function ($query) {
-                return $http.get('/users/getAllExperiences', {
-                    cache: true
-                }).then(function (response) {
-                    var countries = response.data.message;
-                    return countries.filter(function (country) {
-                        return country.name.toLowerCase().indexOf($query.toLowerCase()) != -1;
-                    });
+
+        $scope.loadExperiences = function ($query) {
+            return $http.get('/users/getAllExperiences', {
+                cache: true
+            }).then(function (response) {
+                var countries = response.data.message;
+                return countries.filter(function (country) {
+                    return country.name.toLowerCase().indexOf($query.toLowerCase()) != -1;
                 });
-          }; 
-         // $scope.loadExperiences();
-          }; 
-      
-     /*Function to get user documents
-        * Params - user id
-        * output - Returns the users uploaded documents
-       */
+            });
+        };
+        // $scope.loadExperiences();
+    };
+
+    /*Function to get user documents
+     * Params - user id
+     * output - Returns the users uploaded documents
+     */
     $scope.getUserDocuments = function () {
         $http({
             method: 'POST',
@@ -219,31 +246,28 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             data: {'userid': $stateParams.id},
         }).then(function successCallback(result, status) {
             if (result.data.response == "success") {
-               $scope.user_documents = result.data.message;
+                $scope.user_documents = result.data.message;
             } else {
-               $scope.user_documents = '';
+                $scope.user_documents = '';
             }
         }, function errorCallback(result, status, headers, config) {
             if (result.status == "400") {
-              alert(result.status);
-            }
-            else if (result.status == "401") {
-               alert(result.status);
+                alert(result.status);
+            } else if (result.status == "401") {
+                alert(result.status);
             } else if (result.status == "402") {
-               alert(result.status); 
+                alert(result.status);
             } else if (result.status == "403") {
-               alert(result.status); 
+                alert(result.status);
+            } else if (result.status == "404") {
+                alert('404 (Not Found)');
+            } else if (result.status == "500") {
+                alert(result.status);
             }
-            else if (result.status == "404") {
-               alert('404 (Not Found)'); 
-            }
-            else if (result.status == "500") {
-               alert(result.status);
-            }
-        }); 
+        });
     };
-    
-    
+
+
     /*Function to get user references
      * Params - user id
      * output - Returns the users sent references
@@ -257,43 +281,40 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             if (result.data.message == "success") {
                 var data = result.data.response;
                 $scope.user_references = data;
-               
+
             } else {
-               $scope.user_references = '';
+                $scope.user_references = '';
             }
         }, function errorCallback(result, status, headers, config) {
             if (result.status == "400") {
-              alert(result.status);
-            }
-            else if (result.status == "401") {
-               alert(result.status);
+                alert(result.status);
+            } else if (result.status == "401") {
+                alert(result.status);
             } else if (result.status == "402") {
-               alert(result.status); 
+                alert(result.status);
             } else if (result.status == "403") {
-               alert(result.status); 
+                alert(result.status);
+            } else if (result.status == "404") {
+                alert('404 (Not Found)');
+            } else if (result.status == "500") {
+                alert(result.status);
             }
-            else if (result.status == "404") {
-               alert('404 (Not Found)'); 
-            }
-            else if (result.status == "500") {
-               alert(result.status);
-            }
-        }); 
+        });
     };
-    
+
     $scope.doctorStep3 = function () {
         $scope.getUserDocuments();
         $scope.getUserReferences();
     };
-         
-    
+
+
     /* function to show doctor signup step 4 page */
     $scope.doctorStep4 = function () {
         /* get experience filled in step 2 signup */
         $scope.getUserExperienceById();
         $scope.getUserInfoById($state.params.id);
         $scope.step4_data = {workHistory: [{position: '', company_name: '', from_month: '', from_year: '', to_month: '', to_year: '', reviews: ''}]};
-        
+
         /* send months in view */
         $scope.monthslist = [
             {id: 1, name: "January"}, {id: 2, name: "February"}, {id: 3, name: "March"}, {id: 4, name: "April"}, {id: 5, name: "May"}, {id: 6, name: "June"}, {id: 7, name: "July"}, {id: 8, name: "August"}, {id: 9, name: "September"}, {id: 10, name: "October"}, {id: 11, name: "November"}, {id: 12, name: "December"}
@@ -308,24 +329,24 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             years.push(currentYear + offset - i);
         }
         $scope.yearlist = years;
-        
-        
+
+
         /* get total experience from database */
         //$scope.loadExperiences();
-         $scope.loadExperiences = function ($query) {
-                return $http.get('/users/getAllExperiences', {
-                    cache: true
-                }).then(function (response) {
-                    var countries = response.data.message;
-                    return countries.filter(function (country) {
-                        return country.name.toLowerCase().indexOf($query.toLowerCase()) != -1;
-                    });
+        $scope.loadExperiences = function ($query) {
+            return $http.get('/users/getAllExperiences', {
+                cache: true
+            }).then(function (response) {
+                var countries = response.data.message;
+                return countries.filter(function (country) {
+                    return country.name.toLowerCase().indexOf($query.toLowerCase()) != -1;
                 });
-            };
+            });
+        };
 
     };
 
-    $scope.yearUpdated = function(){
+    $scope.yearUpdated = function () {
         console.log($scope);
     };
 
@@ -352,19 +373,19 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
 
 
     $scope.doctorStep5 = function () {
-         
+
     };
-    
+
     $scope.skipDoctorRequestReference = function () {
-         $scope.loading = true;
-         var user_id = $stateParams.id;
-         $state.go('doctor_step4', {id: user_id});
+        $scope.loading = true;
+        var user_id = $stateParams.id;
+        $state.go('doctor_step4', {id: user_id});
     };
-    
+
     $scope.doctorRequestReference = function () {
         $scope.loading = true;
         var user_id = $stateParams.id;
-        
+
         $http({
             method: 'POST',
             url: '/users/doctorRequestReference',
@@ -378,24 +399,21 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             }
         }, function errorCallback(result, status, headers, config) {
             if (result.status == "400") {
-              alert(result.status);
-            }
-            else if (result.status == "401") {
-               alert(result.status);
+                alert(result.status);
+            } else if (result.status == "401") {
+                alert(result.status);
             } else if (result.status == "402") {
-               alert(result.status); 
+                alert(result.status);
             } else if (result.status == "403") {
-               alert(result.status); 
-            }
-            else if (result.status == "404") {
-               alert('404 (Not Found)'); 
-            }
-            else if (result.status == "500") {
-               alert(result.status);
+                alert(result.status);
+            } else if (result.status == "404") {
+                alert('404 (Not Found)');
+            } else if (result.status == "500") {
+                alert(result.status);
             }
         });
     };
-    
+
     $scope.doctorSignupStep2 = function () {
         $http({
             method: 'POST',
@@ -403,38 +421,35 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             data: {'is_limited_company': $scope.is_limited_company, 'gender': $scope.gender, 'userid': $stateParams.id, 'user': $scope.user, 'experience': $scope.experience},
         }).then(function successCallback(result, status) {
             if (result.data.response == "success") {
-               
-               $scope.doctor_success = result.data.message;
+
+                $scope.doctor_success = result.data.message;
                 $state.go('doctor_signup_step3', {id: result.data.message});
             } else {
                 $scope.doctor_error_step2 = result.data.message;
             }
         }, function errorCallback(result, status, headers, config) {
             if (result.status == "400") {
-              alert(result.status);
-            }
-            else if (result.status == "401") {
-               alert(result.status);
+                alert(result.status);
+            } else if (result.status == "401") {
+                alert(result.status);
             } else if (result.status == "402") {
-               alert(result.status); 
+                alert(result.status);
             } else if (result.status == "403") {
-               alert(result.status); 
-            }
-            else if (result.status == "404") {
-               alert('404 (Not Found)'); 
-            }
-            else if (result.status == "500") {
-               alert(result.status);
+                alert(result.status);
+            } else if (result.status == "404") {
+                alert('404 (Not Found)');
+            } else if (result.status == "500") {
+                alert(result.status);
             }
         });
-        
+
     };
-    
+
     $scope.step_back = function () {
         $scope.loading = true;
         $state.go('doctor_signup_step3', {id: $stateParams.id});
     }
-    
+
 
     /*Function to create employer signup
      * Params - user data
@@ -447,7 +462,7 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             url: '/users/createEmployer',
             data: {'User': $scope.user, 'Department': $scope.tags},
         }).then(function successCallback(result) {
-           // console.log(result.data);
+            // console.log(result.data);
             if (result.data.response == "success") {
                 $scope.loading = false;
                 $scope.employer_success = result.data.message;
@@ -457,7 +472,7 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
                 $scope.loading = false;
             }
         }, function errorCallback(result) {
-             //console.log(result.data)
+            //console.log(result.data)
         });
     };
 
@@ -466,34 +481,34 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
      * output - Returns create created 
      */
     $scope.createEmployerStep2 = function () {
-        
+
         $http({
             method: 'POST',
             url: '/users/createEmployerStep2',
             data: {'User': $scope.user_data},
         }).then(function successCallback(result) {
-           if (result.data.response == "success") {
+            if (result.data.response == "success") {
                 $scope.employer_success = result.data.message;
                 $state.go('dashboard_employer', {employer_data: result.data.message});
             } else {
                 $scope.employer_error = result.data.message;
             }
-            
+
         }, function errorCallback(result) {
-             //console.log(result.data)
+            //console.log(result.data)
         });
     };
-    
-    
-    
-    
+
+
+
+
     /*Function to load employer signup view
      * Params - null
      * output - Returns all active hospital list,signup view,department
      */
     $scope.doctorsignup = function () {
         $scope.getAllHospitals();
-       // $scope.getAllDepartments();
+        // $scope.getAllDepartments();
     };
 
 
@@ -526,7 +541,7 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
     };
 
 
-   
+
     /*Function to get all active hospitals
      * Params - null
      * output - Returns all active hospital in asc order
@@ -554,7 +569,7 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
      * output - Returns all active departments in asc order
      */
     $scope.getAllDepartments = function () {
-        
+
         $http({
             method: 'GET',
             url: '/users/getAllDepartments',
@@ -570,42 +585,42 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             // console.log(result.data)
         });
     }
-    
-   /*Function to get all active departments andn load it to view 
+
+    /*Function to get all active departments andn load it to view 
      * Params - null
      * output - Returns all active departments in asc order
      */
-   $scope.tags = [];
+    $scope.tags = [];
     $scope.loadCountries = function ($query) {
-      return $http.get('/users/getAllDepartments', {
-       cache: true
+        return $http.get('/users/getAllDepartments', {
+            cache: true
         }).then(function (response) {
             var countries = response.data.message;
             return countries.filter(function (country) {
-              //  console.log($query)
-              return country.name.toLowerCase().indexOf($query.toLowerCase()) != -1;
-           });
-         });
+                //  console.log($query)
+                return country.name.toLowerCase().indexOf($query.toLowerCase()) != -1;
+            });
+        });
     };
-    
-    
-    
-    
+
+
+
+
     /*Function to show/hide hospital request
      * Params - null
      */
     $scope.openHospitalForm = function () {
         $scope.open_hospital_form = $scope.open_hospital_form == 1 ? 0 : 1;
-         $scope.hospital_submitted = '';
+        $scope.hospital_submitted = '';
     }
-    
+
     /*Function to send  hospital request to admin
      * Params - null
      */
     $scope.hospitalRequest = function () {
         $scope.emptyArray = {};
         $scope.loading = true;
-         $http({
+        $http({
             method: 'POST',
             url: '/users/hospitalRequest',
             data: {'data': $scope.hospital},
@@ -613,8 +628,8 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             if (result.data.response == "success") {
                 $scope.hospital_error = {'success': true, 'result': result.data.message};
                 $scope.loading = false;
-		$scope.hospital = angular.copy($scope.emptyArray);  
-		$scope.open_hospital_form_data.$setUntouched();
+                $scope.hospital = angular.copy($scope.emptyArray);
+                $scope.open_hospital_form_data.$setUntouched();
             } else {
                 $scope.loading = false;
                 $scope.hospital_error = {'success': false, 'result': result.data.message};
@@ -623,14 +638,14 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             // console.log(result.data)
         });
     }
-    
+
     /*Function to load forgot password view
      * Params - null
      */
     $scope.forgotPassword = function () {
 
     };
-    
+
     /*Function to send email with reset password link to user
      * Params - email
      */
@@ -656,14 +671,14 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             // console.log(result.data)
         });
     };
-    
+
     /*Function to load forgot password view
      * Params - null
      */
     $scope.resetPassword = function () {
         var user_id = $stateParams.id;
         var token = $stateParams.token;
-        
+
         $scope.emptyArray = {};
         $scope.loading = true;
         $http({
@@ -674,16 +689,16 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             //console.log(result);
             $scope.loading = false;
             if (result.data.message == "success") {
-                
+
             } else {
-                 $state.go('error_404', {});
+                $state.go('error_404', {});
             }
         }, function errorCallback(result) {
             $scope.loading = false;
             // console.log(result.data)
         });
     };
-    
+
     /*Function to update password
      * Params - null
      */
@@ -698,7 +713,7 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             if (result.data.message == "success") {
                 $scope.error = {'success': true, 'result': result.data.response};
                 $scope.loading = false;
-                
+
                 $scope.password = '';
                 $scope.cpassword = '';
                 $scope.reset_password_form.$setUntouched();
@@ -715,26 +730,25 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
     /*Function to load references
      * Params - reference row id 
      */
-    $scope.references = function (sort,type) {
+    $scope.references = function (sort, type) {
         var id = $stateParams.id;
         $scope.loading = true;
         $http({
             method: 'POST',
             url: '/users/getReferencesData',
-            data: {'id': id,'sort':sort,'type':type},
+            data: {'id': id, 'sort': sort, 'type': type},
         }).then(function successCallback(result) {
             $scope.loading = false;
             //if feedback alreay given
-            if(result.data.message == "redirect") {
-                 $state.go('home', {});
-            }
-            else if(result.data.message == "success") {
-                $scope.feedback = {'name' : result.data.response.reference_data.receiver_name,'position' : result.data.response.reference_data.receiver_role}
+            if (result.data.message == "redirect") {
+                $state.go('home', {});
+            } else if (result.data.message == "success") {
+                $scope.feedback = {'name': result.data.response.reference_data.receiver_name, 'position': result.data.response.reference_data.receiver_role}
                 $scope.data = {'success': true, 'result': result.data.response};
-                if(result.data.response.questions !='' && result.data.response.question_answers[0]['type'] == 'radio'){
-                   $scope.answer_id = '';
+                if (result.data.response.questions != '' && result.data.response.question_answers[0]['type'] == 'radio') {
+                    $scope.answer_id = '';
                 }
-                
+
                 //check is last step of feedback then send to another page
             } else {
                 $scope.data = {'success': false, 'result': result.data.response};
@@ -743,7 +757,7 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             // console.log(result.data)
         });
     };
-    
+
     $scope.nextReference = function (sort, question_id) {
         //Save the user feedback
         var reference_id = $stateParams.id;
@@ -758,15 +772,14 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
                 $scope.feedback_form.$setUntouched();
                 $scope.feedback = {'comments': ''};
                 if (result.data.is_last_step != '' && result.data.is_last_step == 'yes') {
-                    
+
                     $scope.feedback_error = {'success': true, 'result': result.data.response};
                     $timeout(function () {
-                       $state.go('home');
+                        $state.go('home');
                     }, 3000);
-    }
-                else {
+                } else {
                     $scope.references(sort, 'next');
-    }
+                }
             } else {
                 $scope.feedback_error = {'success': false, 'result': result.data.response};
             }
@@ -774,39 +787,39 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             // console.log(result.data)
         });
     }
-    
-    
-   /*
+
+
+    /*
      *Function to be fired when back button clicked 
      *Here first we check that if a user has given answer to that question then we will delete that answer otherwise nothing will happen 
      * @param sort
      * @returns true/false
      */
-    $scope.backReference = function(sort){
-        
-         //Save the user feedback
+    $scope.backReference = function (sort) {
+
+        //Save the user feedback
         var reference_id = $stateParams.id;
         //$scope.loading = true;
-        
+
         $http({
             method: 'POST',
             url: '/users/saveFeedback',
-            data: {'data' : $scope.feedback},
+            data: {'data': $scope.feedback},
         }).then(function successCallback(result) {
             //$scope.loading = false;
             if (result.data.message == "success") {
                 $scope.feedback_form.$setUntouched();
                 $scope.feedback = {'comments': ''};
-                 $scope.references(sort,'back');
+                $scope.references(sort, 'back');
                 /*if(result.data.is_last_step != '' && result.data.is_last_step =='yes'){
-                    $scope.feedback_error = {'success': true, 'result': result.data.response};
-                    $timeout(function() {
-                       $state.go('home');
-                    }, 3000);
-                }
-                else{
-                    $scope.references(sort,'back');
-                }*/
+                 $scope.feedback_error = {'success': true, 'result': result.data.response};
+                 $timeout(function() {
+                 $state.go('home');
+                 }, 3000);
+                 }
+                 else{
+                 $scope.references(sort,'back');
+                 }*/
             } else {
                 $scope.feedback_error = {'success': false, 'result': result.data.response};
             }
@@ -877,32 +890,32 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
         if (!$scope.hasOwnProperty("userprofile")) {
             $("#linkedinbtn_positions").hide();
             $(".linkedinlogoutbtn").removeClass("hide");
-           IN.API.Profile("me").fields("positions")
-          //IN.API.Raw("/people/~:(id,educations,languages,positions)")
-            .result(function (response) {
-                $scope.$apply(function () {
-                    var positions_data = response.values[0].positions.values;
-                    var user_work_history = [];
-                    for (i = 0; i < response.values[0].positions._total; i++) {
-                        var isCurrent = positions_data[i].isCurrent;
-                        if (isCurrent == true) {
-                            var d = new Date();
-                            var year = d.getFullYear();
-                            var month = d.getMonth();
-                        }
-                        var single_work_history = {position: positions_data[i].title, company_name: positions_data[i].company.name, from_month: positions_data[i].startDate.month.toString(), from_year: positions_data[i].startDate.year.toString(), to_month: month.toString(), to_year: year.toString(), reviews: positions_data[i].summary};
-                        user_work_history.push(single_work_history);
-                    }
-                    if (user_work_history.length > 0) {
-                        $scope.step4_data.workHistory = user_work_history;
-                    }
-                });
-            })
-            .error(function (err) {
-                $scope.$apply(function () {
-                    $scope.error = err;
-                });
-            });
+            IN.API.Profile("me").fields("positions")
+                    //IN.API.Raw("/people/~:(id,educations,languages,positions)")
+                    .result(function (response) {
+                        $scope.$apply(function () {
+                            var positions_data = response.values[0].positions.values;
+                            var user_work_history = [];
+                            for (i = 0; i < response.values[0].positions._total; i++) {
+                                var isCurrent = positions_data[i].isCurrent;
+                                if (isCurrent == true) {
+                                    var d = new Date();
+                                    var year = d.getFullYear();
+                                    var month = d.getMonth();
+                                }
+                                var single_work_history = {position: positions_data[i].title, company_name: positions_data[i].company.name, from_month: positions_data[i].startDate.month.toString(), from_year: positions_data[i].startDate.year.toString(), to_month: month.toString(), to_year: year.toString(), reviews: positions_data[i].summary};
+                                user_work_history.push(single_work_history);
+                            }
+                            if (user_work_history.length > 0) {
+                                $scope.step4_data.workHistory = user_work_history;
+                            }
+                        });
+                    })
+                    .error(function (err) {
+                        $scope.$apply(function () {
+                            $scope.error = err;
+                        });
+                    });
         }
     };
 
@@ -911,17 +924,17 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
         if (!$scope.hasOwnProperty("userprofile")) {
             //$(".linkedinbtn").hide();
             //$(".linkedinlogoutbtn").removeClass("hide");
-             IN.API.Profile("me").fields("educations").result(function (response) { 
+            IN.API.Profile("me").fields("educations").result(function (response) {
                 console.log(response);
                 $scope.$apply(function () {
-                    
+
                 });
             })
-            .error(function (err) {
-                $scope.$apply(function () {
-                    $scope.error = err;
-                });
-            });
+                    .error(function (err) {
+                        $scope.$apply(function () {
+                            $scope.error = err;
+                        });
+                    });
         }
     };
 
@@ -945,31 +958,31 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
     };
 
 
-     /*Function to  get data 
+    /*Function to  get data 
      * Params - reference type,user_id
      * 1)Reference
      * 2)Employer
      * 3)Doctor 
      */
-    $scope.getAllfeedbacks = function (user_id,feedback_type) {
+    $scope.getAllfeedbacks = function (user_id, feedback_type) {
         $scope.loading = true;
         $http({
             method: 'POST',
             url: '/users/getAllfeedbacks',
-            data: {user_id: user_id,'feedback_type':feedback_type},
+            data: {user_id: user_id, 'feedback_type': feedback_type},
         }).then(function successCallback(result) {
-            $scope.loading = false; 
+            $scope.loading = false;
             if (result.data.status == 200) {
-                $scope.feedback_error = {'success': true, 'result': result.data.response,'percentage' : result.data.percentage};
+                $scope.feedback_error = {'success': true, 'result': result.data.response, 'percentage': result.data.percentage};
             } else {
-                $scope.feedback_error = {'success': false, 'result': result.data.response,'percentage' : result.data.percentage}
+                $scope.feedback_error = {'success': false, 'result': result.data.response, 'percentage': result.data.percentage}
             }
         }, function errorCallback(result) {
             $scope.loading = false;
         });
     };
-    
-    
+
+
     /*Function to load feedbacks view and call function to get data 
      * Params - reference type
      * 1)Reference
@@ -977,13 +990,13 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
      * 3)Doctor 
      */
     $scope.feedbacks = function (feedback_type) {
-       var userdata = CommonServices.isLoggedIn();
-       if(userdata['id'] !=''){
-           $scope.getAllfeedbacks(userdata['id'],feedback_type);
-       }
+        var userdata = CommonServices.isLoggedIn();
+        if (userdata['id'] != '') {
+            $scope.getAllfeedbacks(userdata['id'], feedback_type);
+        }
     };
-    
-    
+
+
     switch (action) {
         case "employer_signup" :
             $scope.employerSignup();
@@ -993,7 +1006,7 @@ coverApp.controller('UsersController', function ($state, $scope, BASEURL, $http,
             break;
         case "dashboard" :
             $scope.employerDashboard();
-        break;
+            break;
         case "doctor_signup" :
             $scope.doctorsignup();
             break;
